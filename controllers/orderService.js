@@ -140,31 +140,31 @@ exports.checkoutSession = asyncHandler(async (req, res, next) => {
           product_data: {
             name: req.user.name,
           },
-          unit_amount: cartPrice * 100, // المبلغ بالقرش (100 = 1 جنيه)
+          unit_amount: cartPrice * 100, // تحويل المبلغ إلى القروش (100 قرش = 1 جنيه)
         },
         quantity: 1,
       },
     ],
-   
     mode: 'payment',
-    success_url: `${req.protocol}://${req.get("host")}/allorders`,
-    cancel_url: `${req.protocol}://${req.get("host")}/cart`,
+    success_url: `http://localhost:3000/user/allorders`,
+    cancel_url: `http://localhost:3000/cart`,
     customer_email: req.user.email,
     client_reference_id: req.params.cartId,
     metadata: req.body.shippingAddress,
   });
 
-  // 3) Create session as response
+  // 4) Create session as response
   res.status(200).json({
     status: 'success',
     session,
   });
 });
 
+
 const createOrderCheckout = async (session) => {
   // 1) Get needed data from session
   const cartId = session.client_reference_id;
-  const checkoutAmount = session.amount_total / 100; // تعديل إلى `amount_total` الذي يعكس المبلغ الكلي
+  const checkoutAmount = session.amount_total / 100; // استخدام amount_total من Stripe API
   const shippingAddress = session.metadata;
 
   // 2) Get Cart and User
@@ -198,11 +198,12 @@ const createOrderCheckout = async (session) => {
   }
 };
 
+
 // @desc    This webhook will run when stripe payment successfully paid
 // @route   PUT /webhook-checkout
 // @access  From stripe
 exports.webhookCheckout = (req, res, next) => {
-  const signature = req.headers['stripe-signature'].toString();
+  const signature = req.headers['stripe-signature'];
   let event;
   try {
     event = stripe.webhooks.constructEvent(
@@ -220,3 +221,4 @@ exports.webhookCheckout = (req, res, next) => {
 
   res.status(200).json({ received: true });
 };
+

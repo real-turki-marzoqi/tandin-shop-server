@@ -54,7 +54,7 @@ app.use(express.json());
 // app.options('*', cors());
 
 // Parse URL-encoded bodies
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 
 if (process.env.NODE_ENV === 'development') {
