@@ -50,10 +50,7 @@ app.post(
 
 // Used to parse JSON bodies
 app.use(express.json());
-// app.use(cors());
-// app.options('*', cors());
 
-// Parse URL-encoded bodies
 
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -66,7 +63,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(compression());
 
-app.use(cors());
+
 
 // Mount routers
 
