@@ -63,37 +63,30 @@ exports.getOne = (Model, populateOpts) =>
     res.status(200).json({ data: document });
   });
 
-exports.getAll = (Model, modelName = '') =>
-  asyncHandler(async (req, res) => {
-    let filter = {};
-    if (req.filterObject) {
-      filter = req.filterObject;
-    }
-
-    // Build query
-    // const documentsCounts = await Model.countDocuments();
-    const apiFeatures = new ApiFeatures(Model.find(filter), req.query)
-      .filter()
-      .search(modelName)
-      .limitFields()
-      .sort();
-    // .paginate();
-
-    // Apply pagination after filer and search
-    const docsCount = await Model.countDocuments(apiFeatures.mongooseQuery);
-    apiFeatures.paginate(docsCount);
-
-    // Execute query
-    const { mongooseQuery, paginationResult } = apiFeatures;
-    const documents = await mongooseQuery;
-
-    // Set Images url
-   
-    res
-      .status(200)
-      .json({ results: docsCount, paginationResult, data: documents });
-  });
-
+  exports.getAll = (Model, modelName = '') =>
+    asyncHandler(async (req, res) => {
+      let filter = {};
+      if (req.filterObject) {
+        filter = req.filterObject;
+      }
+      // Build query
+      const documentsCounts = await Model.countDocuments();
+      const apiFeatures = new ApiFeatures(Model.find(filter), req.query)
+        .paginate(documentsCounts)
+        .filter()
+        .search(modelName)
+        .limitFields()
+        .sort();
+  
+      // Execute query
+      const { mongooseQuery, paginationResult } = apiFeatures;
+      const documents = await mongooseQuery;
+  
+      res
+        .status(200)
+        .json({ results: documents.length, paginationResult, data: documents });
+    });
+  
 exports.deleteAll = (Model) =>
   asyncHandler(async (req, res, next) => {
     await Model.deleteMany();

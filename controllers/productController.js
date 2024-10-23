@@ -42,7 +42,7 @@ exports.updateProductImages = imageFactory.updateProductImages(
 // @desc      Get all products
 // @route     GET /api/v1/products
 // @access    Public
-exports.getProducts = factory.getAll(Product, 'Products');
+exports.getProducts = factory.getAll(Product, 'Product');
 
 // @desc      Get specific product by id
 // @route     GET /api/v1/products/:id
