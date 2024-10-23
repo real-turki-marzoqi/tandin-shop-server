@@ -20,7 +20,7 @@ exports.signUp = asyncHandler(async (req, res, next) => {
   });
   const token = createToken(user._id);
 
-  const SignUpMessage = `Hi ${user.name},\n\nThank you for signing up! We appreciate your interest and welcome you to E-Shop community.\n\nBest regards.`;
+  const SignUpMessage = `Hi ${user.name},\n\nThank you for signing up! We appreciate your interest and welcome you to Tandn Shop community.\n\nBest regards.`;
 
   await sendEmail({
     email: user.email,
@@ -160,8 +160,8 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   await user.save();
 
   // 6) إرسال رمز إعادة التعيين عبر البريد الإلكتروني
-  const resetCodemessage = `Hi ${user.name},\n\nWe received a request to reset the password on your E-shop account.\n\nYour reset code is: ${resetCode}\n\nEnter this reset code to complete the reset.\n\nThanks for helping us keep your account secure.\n\nThe E-Shop Team`;
 
+  const resetCodemessage = `Dear ${user.name},\n\nWe have received a request to reset the password associated with your Tandn Shop account.\n\nPlease use the following reset code to proceed with resetting your password:\n\n**${resetCode}**\n\nKindly enter this code in the provided field to complete the process.\n\nIf you did not initiate this request, please ignore this message or contact our support team immediately.\n\nThank you for trusting us to keep your account secure.\n\nBest regards,\n\n**The Tandn-shop Team**`;
   try {
     await sendEmail({
       email: user.email,
